@@ -90,8 +90,10 @@ def index():
         <body>
             <header>
             <h1 style="color: white;">DB VIEWER APP</h1>
-            <h2 style="color: #87CEEB;">All the databases and the tables within them to which {{ db_user }} has access:</h2>
             </header>
+            <div style="background-color: #00008B; color: white; padding: 5px; text-align: center;">
+                <h2 style="color: white;">All the databases and the tables within them to which {{ db_user }} has access</h2>
+            </div>
             <div class="container">
             <p><strong>Current User:</strong> {{ db_user }}</p>
             <h2>Databases and Tables:</h2>
