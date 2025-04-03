@@ -1,0 +1,40 @@
+# db viewer app deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbviewer-deployment
+  labels:
+    app: dbviewer
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbviewer
+  template:
+    metadata:
+      labels:
+        app: dbviewer
+    spec:
+      containers:
+      - name: dbviewer-container
+        image: saianilkumardeyyalaa/mysql-create-db-user-app:latest
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: dbviewer-configmap
+        env:  
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dbviewer-secret
+              key: dbviewer-user-password
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "250m"

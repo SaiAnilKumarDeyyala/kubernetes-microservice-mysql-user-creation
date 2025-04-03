@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-mysql-user-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: create-mysql-user-job
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: mysql-user-setup
+        image: mysql:8.0
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c", "/scripts/create-db-user.sh"]
+        env:
+        - name: TARGET_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dbviewer-secret
+              key: dbviewer-user-password
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dbviewer-secret
+              key: root-password
+        envFrom:
+        - configMapRef:
+            name: dbviewer-configmap
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      volumes:
+      - name: script-volume
+        configMap:
+          name: dbviewer-configmap
+          items:
+          - key: create-db-user.sh
+            path: create-db-user.sh
+          defaultMode: 0755

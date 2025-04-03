@@ -1,0 +1,12 @@
+# service for dbviewer app
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbviewer-service
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: dbviewer
+  type: NodePort
